@@ -1,3 +1,18 @@
+# This file is part of ssh-python.
+# Copyright (C) 2017-2022 Panos Kittenis and contributors.
+#
+# This library is free software; you can redistribute it and/or
+# modify it under the terms of the GNU Lesser General Public
+# License as published by the Free Software Foundation, version 2.1.
+#
+# This library is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+# Lesser General Public License for more details.
+#
+# You should have received a copy of the GNU Lesser General Public
+# License along with this library; if not, write to the Free Software
+# Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 import os
 
 from sys import stderr
@@ -26,7 +41,10 @@ def build_ssh():
         os.symlink('lib', 'local/lib64')
 
     os.chdir('src')
-    check_call('cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=../local -DWITH_GSS_API=ON ../libssh',
+    check_call("""cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=../local \
+    -DWITH_GSSAPI=ON \
+    -DWITH_EXAMPLES=OFF \
+    ../libssh""",
                shell=True, env=os.environ)
     check_call(['make', '-j%s' % (cpu_count(),), 'all', 'install'])
     os.chdir('..')
